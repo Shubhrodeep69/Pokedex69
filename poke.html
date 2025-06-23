@@ -1,0 +1,418 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced Pokédex</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: #1e1e2f;
+      color: #f0f0f0;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      text-align: center;
+      padding: 1rem;
+      background-color: #27293d;
+      color: #fff;
+    }
+    .controls {
+      text-align: center;
+      margin: 1rem;
+    }
+    select, input[type="text"] {
+      padding: 0.5rem;
+      margin: 0.5rem;
+      border-radius: 0.5rem;
+      border: none;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .card {
+      background: #2e2f4e;
+      border-radius: 1rem;
+      padding: 1rem;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .card img {
+      width: 120px;
+      height: 120px;
+    }
+    .card-types {
+      margin-top: 0.5rem;
+    }
+    .card-type {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: bold;
+      margin: 2px;
+      text-transform: capitalize;
+      background: #555;
+    }
+    .favorite-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: #ccc;
+    }
+    .favorite-icon.active {
+      color: #f39c12;
+    }
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .hidden { display: none; }
+    .modal-content {
+      background: #fff;
+      color: #000;
+      padding: 1rem;
+      border-radius: 1rem;
+      width: 95%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    .modal-content img,
+    .modal-content canvas {
+      max-width: 100%;
+      display: block;
+      margin: 0 auto;
+    }
+    .modal-content h2 {
+      text-transform: capitalize;
+    }
+    #closeModal {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      cursor: pointer;
+      font-size: 24px;
+    }
+    .tab-links {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1rem;
+    }
+    .tab-links button {
+      padding: 0.5rem 1rem;
+      background: #27293d;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    .tab-links button:hover {
+      background: #444;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .evolution-chain {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .evo-stage img {
+      width: 96px;
+      height: 96px;
+      cursor: pointer;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin: 1rem;
+    }
+    .pagination button {
+      margin: 0 0.25rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      cursor: pointer;
+      background-color: #444;
+      color: white;
+    }
+    .pagination button.active {
+      background-color: #f39c12;
+      font-weight: bold;
+    }
+    .type-normal { background-color: #A8A77A; }
+    .type-fire { background-color: #EE8130; }
+    .type-water { background-color: #6390F0; }
+    .type-electric { background-color: #F7D02C; }
+    .type-grass { background-color: #7AC74C; }
+    .type-ice { background-color: #96D9D6; }
+    .type-fighting { background-color: #C22E28; }
+    .type-poison { background-color: #A33EA1; }
+    .type-ground { background-color: #E2BF65; }
+    .type-flying { background-color: #A98FF3; }
+    .type-psychic { background-color: #F95587; }
+    .type-bug { background-color: #A6B91A; }
+    .type-rock { background-color: #B6A136; }
+    .type-ghost { background-color: #735797; }
+    .type-dragon { background-color: #6F35FC; }
+    .type-dark { background-color: #705746; }
+    .type-steel { background-color: #B7B7CE; }
+    .type-fairy { background-color: #D685AD; }
+  </style>
+</head>
+<body>
+  <div class="header"><h1>Pokédex</h1></div>
+
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="Search by name">
+    <select id="typeFilter">
+      <option value="">All Types</option>
+      <option value="normal">Normal</option>
+      <option value="fire">Fire</option>
+      <option value="water">Water</option>
+      <option value="electric">Electric</option>
+      <option value="grass">Grass</option>
+      <option value="ice">Ice</option>
+      <option value="fighting">Fighting</option>
+      <option value="poison">Poison</option>
+      <option value="ground">Ground</option>
+      <option value="flying">Flying</option>
+      <option value="psychic">Psychic</option>
+      <option value="bug">Bug</option>
+      <option value="rock">Rock</option>
+      <option value="ghost">Ghost</option>
+      <option value="dragon">Dragon</option>
+      <option value="dark">Dark</option>
+      <option value="steel">Steel</option>
+      <option value="fairy">Fairy</option>
+    </select>
+    <select id="regionFilter">
+      <option value="">All Regions</option>
+      <option value="kanto">Kanto</option>
+      <option value="johto">Johto</option>
+      <option value="hoenn">Hoenn</option>
+      <option value="sinnoh">Sinnoh</option>
+      <option value="unova">Unova</option>
+      <option value="kalos">Kalos</option>
+      <option value="alola">Alola</option>
+      <option value="galar">Galar</option>
+      <option value="paldea">Paldea</option>
+    </select>
+    <label>
+      <input type="checkbox" id="favoritesOnly"> Show Favorites Only
+    </label>
+  </div>
+
+  <div class="grid-container" id="pokemonGrid"></div>
+  <div class="pagination" id="pagination"></div>
+
+  <div class="modal hidden" id="detailsModal">
+    <div class="modal-content">
+      <span id="closeModal">&times;</span>
+      <h2 id="modalName"></h2>
+      <img id="modalImage" src="" alt="Pokemon">
+      <div class="tab-links">
+        <button onclick="showTab('statsTab')">Stats</button>
+        <button onclick="showTab('movesTab')">Moves</button>
+        <button onclick="showTab('evolutionTab')">Evolution</button>
+      </div>
+      <div id="statsTab" class="tab-content active">
+        <canvas id="statsChart" width="300" height="300"></canvas>
+        <ul id="baseStats"></ul>
+      </div>
+      <div id="movesTab" class="tab-content">
+        <ul id="modalMoves"></ul>
+      </div>
+      <div id="evolutionTab" class="tab-content">
+        <div class="evolution-chain" id="evolutionChainContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const grid = document.getElementById("pokemonGrid");
+    const pagination = document.getElementById("pagination");
+    const searchInput = document.getElementById("searchInput");
+    const typeFilter = document.getElementById("typeFilter");
+    const regionFilter = document.getElementById("regionFilter");
+    const favoritesOnlyCheckbox = document.getElementById("favoritesOnly");
+
+    const modal = document.getElementById("detailsModal");
+    const modalName = document.getElementById("modalName");
+    const modalImage = document.getElementById("modalImage");
+    const baseStats = document.getElementById("baseStats");
+    const modalMoves = document.getElementById("modalMoves");
+    const closeModal = document.getElementById("closeModal");
+    const statsChartCanvas = document.getElementById("statsChart");
+    const evolutionChainContainer = document.getElementById("evolutionChainContainer");
+
+    let statsChart;
+    let allPokemon = [];
+    let filteredPokemon = [];
+    let currentPage = 1;
+    const itemsPerPage = 20;
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const regionRanges = {
+      kanto: [1, 151], johto: [152, 251], hoenn: [252, 386],
+      sinnoh: [387, 493], unova: [494, 649], kalos: [650, 721],
+      alola: [722, 809], galar: [810, 905], paldea: [906, 1025]
+    };
+
+    function createCard(pokemon) {
+      const card = document.createElement("div");
+      card.className = "card";
+      const isFavorite = favorites.includes(pokemon.id);
+      const typesHTML = pokemon.types.map(t =>
+        `<span class="card-type type-${t.type.name}">${t.type.name}</span>`
+      ).join('');
+      card.innerHTML = `
+        <span class="favorite-icon ${isFavorite ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite(${pokemon.id})">
+          ${isFavorite ? '❤️' : '🤍'}
+        </span>
+        <img src="${pokemon.sprites.other['official-artwork'].front_default}" alt="${pokemon.name}" />
+        <h3>${pokemon.name}</h3>
+        <div class="card-types">${typesHTML}</div>
+      `;
+      card.onclick = () => showDetails(pokemon);
+      grid.appendChild(card);
+    }
+
+    function toggleFavorite(id) {
+      if (favorites.includes(id)) {
+        favorites = favorites.filter(favId => favId !== id);
+      } else {
+        favorites.push(id);
+      }
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      filterPokemons();
+    }
+
+    function filterPokemons() {
+      let filtered = allPokemon;
+      const searchValue = searchInput.value.toLowerCase();
+      const typeValue = typeFilter.value;
+      const regionValue = regionFilter.value;
+      const showFavoritesOnly = favoritesOnlyCheckbox.checked;
+
+      if (searchValue) {
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(searchValue));
+      }
+      if (typeValue) {
+        filtered = filtered.filter(p => p.types.some(t => t.type.name === typeValue));
+      }
+      if (regionValue) {
+        const [start, end] = regionRanges[regionValue];
+        filtered = filtered.filter(p => p.id >= start && p.id <= end);
+      }
+      if (showFavoritesOnly) {
+        filtered = filtered.filter(p => favorites.includes(p.id));
+      }
+
+      filteredPokemon = filtered;
+      renderPage();
+    }
+
+    function renderPage() {
+      grid.innerHTML = "";
+      pagination.innerHTML = "";
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      filteredPokemon.slice(start, end).forEach(createCard);
+      const totalPages = Math.ceil(filteredPokemon.length / itemsPerPage);
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add("active");
+        btn.onclick = () => { currentPage = i; renderPage(); };
+        pagination.appendChild(btn);
+      }
+    }
+
+    async function showDetails(pokemon) {
+      modal.classList.remove("hidden");
+      modalName.textContent = pokemon.name;
+      modalImage.src = pokemon.sprites.other['official-artwork'].front_default;
+
+      if (statsChart) statsChart.destroy();
+      statsChart = new Chart(statsChartCanvas, {
+        type: 'radar',
+        data: {
+          labels: pokemon.stats.map(s => s.stat.name),
+          datasets: [{
+            label: 'Base Stats',
+            data: pokemon.stats.map(s => s.base_stat),
+            borderColor: 'rgba(255,99,132,1)',
+            backgroundColor: 'rgba(255,99,132,0.2)'
+          }]
+        }
+      });
+
+      baseStats.innerHTML = pokemon.stats.map(s => `<li>${s.stat.name}: ${s.base_stat}</li>`).join('');
+      modalMoves.innerHTML = pokemon.moves.slice(0, 10).map(m => `<li>${m.move.name}</li>`).join('');
+
+      const speciesRes = await fetch(pokemon.species.url);
+      const speciesData = await speciesRes.json();
+      const evoRes = await fetch(speciesData.evolution_chain.url);
+      const evoData = await evoRes.json();
+
+      evolutionChainContainer.innerHTML = "";
+      let evo = evoData.chain;
+      while (evo) {
+        const evoName = evo.species.name;
+        const evoDetails = await fetch(`https://pokeapi.co/api/v2/pokemon/${evoName}`).then(res => res.json());
+        const evoStage = document.createElement("div");
+        evoStage.className = "evo-stage";
+        evoStage.innerHTML = `<img src="${evoDetails.sprites.other['official-artwork'].front_default}" alt="${evoName}"><p>${evoName}</p>`;
+        evoStage.onclick = () => showDetails(evoDetails);
+        evolutionChainContainer.appendChild(evoStage);
+        evo = evo.evolves_to[0];
+      }
+    }
+
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    closeModal.onclick = () => modal.classList.add("hidden");
+
+    async function fetchPokemonData() {
+      const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000");
+      const data = await res.json();
+      const promises = data.results.map(p => fetch(p.url).then(res => res.json()));
+      allPokemon = await Promise.all(promises);
+      filterPokemons();
+    }
+
+    searchInput.addEventListener("input", filterPokemons);
+    typeFilter.addEventListener("change", filterPokemons);
+    regionFilter.addEventListener("change", filterPokemons);
+    favoritesOnlyCheckbox.addEventListener("change", filterPokemons);
+
+    fetchPokemonData();
+  </script>
+</body>
+</html>
+
