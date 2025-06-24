@@ -1,11 +1,376 @@
-<!DOCTYPE html>
+<!-- Feature : types selection, region selector, favorite , card showing and details also, light and dark mode, battle simulator, pagignation  -->
+
+<!-- Combination of index.html, style.css, script.js files -->
+
+
+
+
+
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Advanced Pokédex</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --background-color: #1e1e2f;
+      --text-color: #f0f0f0;
+      --header-background: #27293d;
+      --card-background: #2e2f4e;
+      --card-type-background: #555;
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .header {
+      text-align: center;
+      padding: 1rem;
+      background-color: var(--header-background);
+      color: #fff;
+    }
+
+    .controls {
+      text-align: center;
+      margin: 1rem;
+    }
+
+    select, input[type="text"] {
+      padding: 0.5rem;
+      margin: 0.5rem;
+      border-radius: 0.5rem;
+      border: none;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card-background);
+      border-radius: 1rem;
+      padding: 1rem;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .card img {
+      width: 120px;
+      height: 120px;
+    }
+
+    .card-types {
+      margin-top: 0.5rem;
+    }
+
+    .card-type {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: bold;
+      margin: 2px;
+      text-transform: capitalize;
+      background: var(--card-type-background);
+    }
+
+    .favorite-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: #ccc;
+    }
+
+    .favorite-icon.active {
+      color: #f39c12;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .hidden { display: none; }
+
+    .modal-content {
+      background: #fff;
+      color: #000;
+      padding: 1rem;
+      border-radius: 1rem;
+      width: 95%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-content img,
+    .modal-content canvas {
+      max-width: 100%;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .modal-content h2 {
+      text-transform: capitalize;
+    }
+
+    #closeModal {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      cursor: pointer;
+      font-size: 24px;
+    }
+
+    .tab-links {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1rem;
+    }
+
+    .tab-links button {
+      padding: 0.5rem 1rem;
+      background: #27293d;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .tab-links button:hover {
+      background: #444;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .evolution-chain {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .evo-stage img {
+      width: 96px;
+      height: 96px;
+      cursor: pointer;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin: 1rem;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      max-width: 100%;
+      padding: 0 1rem;
+    }
+
+    .pagination button {
+      margin: 0;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      border: none;
+      cursor: pointer;
+      background-color: #444;
+      color: white;
+      min-width: 2.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .pagination button.active {
+      background-color: #f39c12;
+      font-weight: bold;
+    }
+
+    @media (max-width: 480px) {
+      .pagination button {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+        min-width: 2rem;
+      }
+    }
+
+    .type-normal { background-color: #A8A77A; }
+    .type-fire { background-color: #EE8130; }
+    .type-water { background-color: #6390F0; }
+    .type-electric { background-color: #F7D02C; }
+    .type-grass { background-color: #7AC74C; }
+    .type-ice { background-color: #96D9D6; }
+    .type-fighting { background-color: #C22E28; }
+    .type-poison { background-color: #A33EA1; }
+    .type-ground { background-color: #E2BF65; }
+    .type-flying { background-color: #A98FF3; }
+    .type-psychic { background-color: #F95587; }
+    .type-bug { background-color: #A6B91A; }
+    .type-rock { background-color: #B6A136; }
+    .type-ghost { background-color: #735797; }
+    .type-dragon { background-color: #6F35FC; }
+    .type-dark { background-color: #705746; }
+    .type-steel { background-color: #B7B7CE; }
+    .type-fairy { background-color: #D685AD; }
+
+    body.light-mode {
+      --background-color: #ffffff;
+      --text-color: #000000;
+      --header-background: #f0f0f0;
+      --card-background: #e0e0e0;
+      --card-type-background: #ccc;
+    }
+
+    .battle-section {
+      background: var(--card-background);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin: 1rem auto;
+      max-width: 800px;
+      text-align: center;
+    }
+
+    .battle-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .pokemon-selector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .battle-select {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: none;
+      min-width: 150px;
+    }
+
+    .pokemon-preview {
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pokemon-preview img {
+      width: 80px;
+      height: 80px;
+    }
+
+    .vs {
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 0 1rem;
+    }
+
+    .battle-button {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      background-color: #f39c12;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .battle-button:hover {
+      transform: scale(1.05);
+    }
+
+    .battle-result {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      background: var(--header-background);
+      display: none;
+    }
+
+    .type-effectiveness {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.5rem;
+      margin: 0.25rem;
+      font-weight: bold;
+    }
+
+    .super-effective {
+      background-color: #4CAF50;
+    }
+
+    .not-very-effective {
+      background-color: #f44336;
+    }
+
+    .neutral {
+      background-color: #2196F3;
+    }
+
+    .no-effect {
+      background-color: #757575;
+    }
+
+    .winner-display {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 1rem 0;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background: var(--card-type-background);
+    }
+
+    .winner-display.draw {
+      background: #9E9E9E;
+    }
+
+    .attacking {
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+  </style>
 </head>
 <body>
   <div class="header"><h1>Pokédex</h1></div>
@@ -48,6 +413,30 @@
     <label>
       <input type="checkbox" id="favoritesOnly"> Show Favorites Only
     </label>
+    <label>
+      <input type="checkbox" id="themeToggle"> Dark Mode
+    </label>
+  </div>
+
+  <div class="battle-section">
+    <h2>Pokémon Battle Simulator</h2>
+    <div class="battle-controls">
+      <div class="pokemon-selector">
+        <select id="pokemon1Select" class="battle-select">
+          <option value="">Select Pokémon 1</option>
+        </select>
+        <div id="pokemon1Preview" class="pokemon-preview"></div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="pokemon-selector">
+        <select id="pokemon2Select" class="battle-select">
+          <option value="">Select Pokémon 2</option>
+        </select>
+        <div id="pokemon2Preview" class="pokemon-preview"></div>
+      </div>
+      <button id="battleButton" class="battle-button">Battle!</button>
+    </div>
+    <div id="battleResult" class="battle-result"></div>
   </div>
 
   <div class="grid-container" id="pokemonGrid"></div>
@@ -76,6 +465,605 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const grid = document.getElementById("pokemonGrid");
+    const pagination = document.getElementById("pagination");
+    const searchInput = document.getElementById("searchInput");
+    const typeFilter = document.getElementById("typeFilter");
+    const regionFilter = document.getElementById("regionFilter");
+    const favoritesOnlyCheckbox = document.getElementById("favoritesOnly");
+    const themeToggle = document.getElementById("themeToggle");
+
+    const modal = document.getElementById("detailsModal");
+    const modalName = document.getElementById("modalName");
+    const modalImage = document.getElementById("modalImage");
+    const baseStats = document.getElementById("baseStats");
+    const modalMoves = document.getElementById("modalMoves");
+    const closeModal = document.getElementById("closeModal");
+    const statsChartCanvas = document.getElementById("statsChart");
+    const evolutionChainContainer = document.getElementById("evolutionChainContainer");
+
+    // Battle simulator elements
+    const pokemon1Select = document.getElementById('pokemon1Select');
+    const pokemon2Select = document.getElementById('pokemon2Select');
+    const pokemon1Preview = document.getElementById('pokemon1Preview');
+    const pokemon2Preview = document.getElementById('pokemon2Preview');
+    const battleButton = document.getElementById('battleButton');
+    const battleResult = document.getElementById('battleResult');
+
+    let statsChart;
+    let allPokemon = [];
+    let filteredPokemon = [];
+    let currentPage = 1;
+    const itemsPerPage = 20;
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const regionRanges = {
+      kanto: [1, 151], johto: [152, 251], hoenn: [252, 386],
+      sinnoh: [387, 493], unova: [494, 649], kalos: [650, 721],
+      alola: [722, 809], galar: [810, 905], paldea: [906, 1025]
+    };
+
+    // Type effectiveness chart
+    const typeChart = {
+      normal: { weak: ['fighting'], resist: [], immune: ['ghost'] },
+      fire: { weak: ['water', 'ground', 'rock'], resist: ['fire', 'grass', 'ice', 'bug', 'steel', 'fairy'] },
+      water: { weak: ['electric', 'grass'], resist: ['fire', 'water', 'ice', 'steel'] },
+      electric: { weak: ['ground'], resist: ['electric', 'flying', 'steel'] },
+      grass: { weak: ['fire', 'ice', 'poison', 'flying', 'bug'], resist: ['water', 'electric', 'grass', 'ground'] },
+      ice: { weak: ['fire', 'fighting', 'rock', 'steel'], resist: ['ice'] },
+      fighting: { weak: ['flying', 'psychic', 'fairy'], resist: ['bug', 'rock', 'dark'] },
+      poison: { weak: ['ground', 'psychic'], resist: ['grass', 'fighting', 'poison', 'bug', 'fairy'] },
+      ground: { weak: ['water', 'grass', 'ice'], resist: ['poison', 'rock'], immune: ['electric'] },
+      flying: { weak: ['electric', 'ice', 'rock'], resist: ['grass', 'fighting', 'bug'], immune: ['ground'] },
+      psychic: { weak: ['bug', 'ghost', 'dark'], resist: ['fighting', 'psychic'] },
+      bug: { weak: ['fire', 'flying', 'rock'], resist: ['grass', 'fighting', 'ground'] },
+      rock: { weak: ['water', 'grass', 'fighting', 'ground', 'steel'], resist: ['normal', 'fire', 'poison', 'flying'] },
+      ghost: { weak: ['ghost', 'dark'], resist: ['poison', 'bug'], immune: ['normal', 'fighting'] },
+      dragon: { weak: ['ice', 'dragon', 'fairy'], resist: ['fire', 'water', 'electric', 'grass'] },
+      dark: { weak: ['fighting', 'bug', 'fairy'], resist: ['ghost', 'dark'], immune: ['psychic'] },
+      steel: { weak: ['fire', 'fighting', 'ground'], resist: ['normal', 'grass', 'ice', 'flying', 'psychic', 'bug', 'rock', 'dragon', 'steel', 'fairy'], immune: ['poison'] },
+      fairy: { weak: ['poison', 'steel'], resist: ['fighting', 'bug', 'dark'], immune: ['dragon'] }
+    };
+
+    function createCard(pokemon) {
+      const card = document.createElement("div");
+      card.className = "card";
+      const isFavorite = favorites.includes(pokemon.id);
+      const typesHTML = pokemon.types.map(t =>
+        `<span class="card-type type-${t.type.name}">${t.type.name}</span>`
+      ).join('');
+      card.innerHTML = `
+        <span class="favorite-icon ${isFavorite ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite(${pokemon.id})">
+          ${isFavorite ? '❤️' : '🤍'}
+        </span>
+        <img src="${pokemon.sprites.other['official-artwork'].front_default}" alt="${pokemon.name}" />
+        <h3>${pokemon.name}</h3>
+        <div class="card-types">${typesHTML}</div>
+      `;
+      card.onclick = () => showDetails(pokemon);
+      grid.appendChild(card);
+    }
+
+    function toggleFavorite(id) {
+      if (favorites.includes(id)) {
+        favorites = favorites.filter(favId => favId !== id);
+      } else {
+        favorites.push(id);
+      }
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      filterPokemons();
+    }
+
+    function filterPokemons() {
+      let filtered = allPokemon;
+      const searchValue = searchInput.value.toLowerCase();
+      const typeValue = typeFilter.value;
+      const regionValue = regionFilter.value;
+      const showFavoritesOnly = favoritesOnlyCheckbox.checked;
+
+      if (searchValue) {
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(searchValue));
+      }
+      if (typeValue) {
+        filtered = filtered.filter(p => p.types.some(t => t.type.name === typeValue));
+      }
+      if (regionValue) {
+        const [start, end] = regionRanges[regionValue];
+        filtered = filtered.filter(p => p.id >= start && p.id <= end);
+      }
+      if (showFavoritesOnly) {
+        filtered = filtered.filter(p => favorites.includes(p.id));
+      }
+
+      filteredPokemon = filtered;
+      renderPage();
+    }
+
+    function renderPage() {
+      grid.innerHTML = "";
+      pagination.innerHTML = "";
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      filteredPokemon.slice(start, end).forEach(createCard);
+      const totalPages = Math.ceil(filteredPokemon.length / itemsPerPage);
+
+      // Create Previous button
+      const prevButton = document.createElement("button");
+      prevButton.textContent = "Prev";
+      prevButton.disabled = currentPage === 1;
+      prevButton.onclick = () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderPage();
+        }
+      };
+      pagination.appendChild(prevButton);
+
+      // Show limited number of page buttons
+      const maxVisibleButtons = 5;
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
+
+      // Adjust if we're at the end
+      if (endPage - startPage + 1 < maxVisibleButtons) {
+        startPage = Math.max(1, endPage - maxVisibleButtons + 1);
+      }
+
+      // First page button (if needed)
+      if (startPage > 1) {
+        const firstButton = document.createElement("button");
+        firstButton.textContent = "1";
+        firstButton.onclick = () => { currentPage = 1; renderPage(); };
+        pagination.appendChild(firstButton);
+        if (startPage > 2) {
+          const ellipsis = document.createElement("span");
+          ellipsis.textContent = "...";
+          ellipsis.style.padding = "0 0.5rem";
+          pagination.appendChild(ellipsis);
+        }
+      }
+
+      // Numbered buttons
+      for (let i = startPage; i <= endPage; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add("active");
+        btn.onclick = () => { currentPage = i; renderPage(); };
+        pagination.appendChild(btn);
+      }
+
+      // Last page button (if needed)
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          const ellipsis = document.createElement("span");
+          ellipsis.textContent = "...";
+          ellipsis.style.padding = "0 0.5rem";
+          pagination.appendChild(ellipsis);
+        }
+        const lastButton = document.createElement("button");
+        lastButton.textContent = totalPages;
+        lastButton.onclick = () => { currentPage = totalPages; renderPage(); };
+        pagination.appendChild(lastButton);
+      }
+
+      // Create Next button
+      const nextButton = document.createElement("button");
+      nextButton.textContent = "Next";
+      nextButton.disabled = currentPage === totalPages;
+      nextButton.onclick = () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderPage();
+        }
+      };
+      pagination.appendChild(nextButton);
+    }
+
+    async function showDetails(pokemon) {
+      modal.classList.remove("hidden");
+      modalName.textContent = pokemon.name;
+      modalImage.src = pokemon.sprites.other['official-artwork'].front_default;
+
+      if (statsChart) statsChart.destroy();
+      statsChart = new Chart(statsChartCanvas, {
+        type: 'radar',
+        data: {
+          labels: pokemon.stats.map(s => s.stat.name),
+          datasets: [{
+            label: 'Base Stats',
+            data: pokemon.stats.map(s => s.base_stat),
+            borderColor: 'rgba(255,99,132,1)',
+            backgroundColor: 'rgba(255,99,132,0.2)'
+          }]
+        }
+      });
+
+      baseStats.innerHTML = pokemon.stats.map(s => `<li>${s.stat.name}: ${s.base_stat}</li>`).join('');
+      modalMoves.innerHTML = pokemon.moves.slice(0, 10).map(m => `<li>${m.move.name}</li>`).join('');
+
+      const speciesRes = await fetch(pokemon.species.url);
+      const speciesData = await speciesRes.json();
+      const evoRes = await fetch(speciesData.evolution_chain.url);
+      const evoData = await evoRes.json();
+
+      evolutionChainContainer.innerHTML = "";
+      let evo = evoData.chain;
+      while (evo) {
+        const evoName = evo.species.name;
+        const evoDetails = await fetch(`https://pokeapi.co/api/v2/pokemon/${evoName}`).then(res => res.json());
+        const evoStage = document.createElement("div");
+        evoStage.className = "evo-stage";
+        evoStage.innerHTML = `<img src="${evoDetails.sprites.other['official-artwork'].front_default}" alt="${evoName}"><p>${evoName}</p>`;
+        evoStage.onclick = () => showDetails(evoDetails);
+        evolutionChainContainer.appendChild(evoStage);
+        evo = evo.evolves_to[0];
+      }
+    }
+
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    closeModal.onclick = () => modal.classList.add("hidden");
+
+    // Populate battle selects with Pokémon
+    function populateBattleSelects() {
+      // Clear existing options (keeping the first "Select Pokémon" option)
+      pokemon1Select.innerHTML = '<option value="">Select Pokémon 1</option>';
+      pokemon2Select.innerHTML = '<option value="">Select Pokémon 2</option>';
+
+      // Sort Pokémon by ID number
+      const sortedPokemon = [...allPokemon].sort((a, b) => a.id - b.id);
+
+      sortedPokemon.forEach(pokemon => {
+        const option = document.createElement('option');
+        option.value = pokemon.id;
+        option.textContent = `#${pokemon.id.toString().padStart(3, '0')} ${pokemon.name}`;
+        
+        // Clone the option for both selects
+        pokemon1Select.appendChild(option.cloneNode(true));
+        pokemon2Select.appendChild(option);
+      });
+    }
+
+    // Update preview when Pokémon is selected
+    function updatePreview(selectElement, previewElement) {
+      const selectedId = selectElement.value;
+      if (!selectedId) {
+        previewElement.innerHTML = '';
+        return;
+      }
+      
+      try {
+        const pokemon = allPokemon.find(p => p.id == selectedId);
+        if (!pokemon) {
+          throw new Error("Pokémon not found");
+        }
+        
+        previewElement.innerHTML = `
+          <img src="${pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default}" 
+               alt="${pokemon.name}"
+               onerror="this.src='https://via.placeholder.com/96?text=Pokémon'">
+          <h3>${pokemon.name}</h3>
+          <div class="card-types">
+            ${pokemon.types.map(t => `<span class="card-type type-${t.type.name}">${t.type.name}</span>`).join('')}
+          </div>
+        `;
+      } catch (error) {
+        console.error("Error updating preview:", error);
+        previewElement.innerHTML = '<p>Error loading Pokémon</p>';
+      }
+    }
+
+    // Calculate type effectiveness
+    // Update your type effectiveness calculation function
+function calculateEffectiveness(attackerTypes, defenderTypes) {
+  let effectiveness = 1;
+  
+  // Validate types exist
+  if (!attackerTypes || !defenderTypes) {
+    console.error("Invalid types provided", { attackerTypes, defenderTypes });
+    return 1; // Return neutral effectiveness if types are invalid
+  }
+
+  defenderTypes.forEach(defenderType => {
+    // Skip if type not in chart
+    if (!typeChart[defenderType]) {
+      console.warn(`Type ${defenderType} not found in type chart`);
+      return;
+    }
+
+    attackerTypes.forEach(attackerType => {
+      // Skip if type not in chart
+      if (!typeChart[attackerType]) {
+        console.warn(`Type ${attackerType} not found in type chart`);
+        return;
+      }
+
+      const typeData = typeChart[defenderType];
+      if (typeData.immune && typeData.immune.includes(attackerType)) {
+        effectiveness = 0;
+        return;
+      }
+      
+      if (typeData.weak && typeData.weak.includes(attackerType)) {
+        effectiveness *= 2;
+      } else if (typeData.resist && typeData.resist.includes(attackerType)) {
+        effectiveness *= 0.5;
+      }
+    });
+  });
+  
+  return effectiveness;
+}
+
+// Update your battle button click handler
+battleButton.addEventListener('click', async () => {
+  const pokemon1Id = pokemon1Select.value;
+  const pokemon2Id = pokemon2Select.value;
+  
+  if (!pokemon1Id || !pokemon2Id) {
+    alert('Please select two Pokémon to battle!');
+    return;
+  }
+  
+  battleResult.style.display = 'none';
+  battleButton.disabled = true;
+  battleButton.textContent = 'Battling...';
+  
+  try {
+    const pokemon1 = allPokemon.find(p => p.id == pokemon1Id);
+    const pokemon2 = allPokemon.find(p => p.id == pokemon2Id);
+    
+    if (!pokemon1 || !pokemon2) {
+      throw new Error("One or both Pokémon not found");
+    }
+
+    // Validate types before battle
+    const types1 = pokemon1.types?.map(t => t.type?.name).filter(Boolean) || [];
+    const types2 = pokemon2.types?.map(t => t.type?.name).filter(Boolean) || [];
+    
+    if (types1.length === 0 || types2.length === 0) {
+      throw new Error("Invalid type data for Pokémon");
+    }
+
+    // Battle animation
+    pokemon1Preview.classList.add('attacking');
+    await new Promise(resolve => setTimeout(resolve, 500));
+    pokemon2Preview.classList.add('attacking');
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    const effectiveness1to2 = calculateEffectiveness(types1, types2);
+    const effectiveness2to1 = calculateEffectiveness(types2, types1);
+    
+    // Rest of your battle calculation code...
+    // [Keep your existing stat comparison and winner determination code]
+    
+    battleResult.style.display = 'block';
+    
+  } catch (error) {
+    console.error("Battle error:", error);
+    battleResult.innerHTML = `
+      <h3>Battle Error</h3>
+      <p>${error.message}</p>
+      <p><small>Please try different Pokémon</small></p>
+    `;
+    battleResult.style.display = 'block';
+  } finally {
+    battleButton.disabled = false;
+    battleButton.textContent = 'Battle!';
+    pokemon1Preview.classList.remove('attacking');
+    pokemon2Preview.classList.remove('attacking');
+  }
+});
+
+    // Compare Pokémon stats
+    function compareStats(pokemon1, pokemon2) {
+      const statWeights = {
+        hp: 1,
+        attack: 1.2,
+        defense: 1.1,
+        'special-attack': 1.2,
+        'special-defense': 1.1,
+        speed: 1
+      };
+      
+      let score1 = 0;
+      let score2 = 0;
+      
+      pokemon1.stats.forEach(stat => {
+        score1 += stat.base_stat * (statWeights[stat.stat.name] || 1);
+      });
+      
+      pokemon2.stats.forEach(stat => {
+        score2 += stat.base_stat * (statWeights[stat.stat.name] || 1);
+      });
+      
+      // Calculate type advantages
+      const types1 = pokemon1.types.map(t => t.type.name);
+      const types2 = pokemon2.types.map(t => t.type.name);
+      
+      const effectiveness1to2 = calculateEffectiveness(types1, types2);
+      const effectiveness2to1 = calculateEffectiveness(types2, types1);
+      
+      score1 *= effectiveness1to2;
+      score2 *= effectiveness2to1;
+      
+      return { score1, score2, effectiveness1to2, effectiveness2to1 };
+    }
+
+    // Battle button click handler
+    // Replace your existing battleButton click handler with this:
+// Update your battle button event listener with this:
+battleButton.addEventListener('click', async () => {
+  const pokemon1Id = pokemon1Select.value;
+  const pokemon2Id = pokemon2Select.value;
+  
+  if (!pokemon1Id || !pokemon2Id) {
+    alert('Please select two Pokémon to battle!');
+    return;
+  }
+  
+  // Reset and prepare UI
+  battleResult.style.display = 'none';
+  battleButton.disabled = true;
+  battleButton.textContent = 'Battling...';
+  
+  try {
+    // Get Pokémon data
+    const pokemon1 = allPokemon.find(p => p.id == pokemon1Id);
+    const pokemon2 = allPokemon.find(p => p.id == pokemon2Id);
+    
+    if (!pokemon1 || !pokemon2) {
+      throw new Error("Pokémon data not found");
+    }
+    
+    // Add battle animation
+    pokemon1Preview.classList.add('attacking');
+    await new Promise(resolve => setTimeout(resolve, 500));
+    pokemon2Preview.classList.add('attacking');
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Calculate battle results
+    const types1 = pokemon1.types.map(t => t.type.name);
+    const types2 = pokemon2.types.map(t => t.type.name);
+    
+    // Verify types exist in type chart
+    types1.forEach(type => {
+      if (!typeChart[type]) throw new Error(`Invalid type: ${type}`);
+    });
+    types2.forEach(type => {
+      if (!typeChart[type]) throw new Error(`Invalid type: ${type}`);
+    });
+    
+    const effectiveness1to2 = calculateEffectiveness(types1, types2);
+    const effectiveness2to1 = calculateEffectiveness(types2, types1);
+    
+    // Calculate weighted stats
+    const statWeights = {
+      hp: 1,
+      attack: 1.2,
+      defense: 1.1,
+      'special-attack': 1.2,
+      'special-defense': 1.1,
+      speed: 1
+    };
+    
+    let score1 = pokemon1.stats.reduce((sum, stat) => 
+      sum + (stat.base_stat * (statWeights[stat.stat.name] || 1)), 0);
+    
+    let score2 = pokemon2.stats.reduce((sum, stat) => 
+      sum + (stat.base_stat * (statWeights[stat.stat.name] || 1)), 0);
+    
+    // Apply type effectiveness
+    score1 *= effectiveness1to2;
+    score2 *= effectiveness2to1;
+    
+    // Determine winner
+    let winner;
+    if (score1 > score2 * 1.1) winner = pokemon1;
+    else if (score2 > score1 * 1.1) winner = pokemon2;
+    else winner = null; // Draw
+    
+    // Display results
+    battleResult.innerHTML = `
+      <h3>Battle Results</h3>
+      <div class="type-matchups">
+        <h4>Type Effectiveness:</h4>
+        <p>${pokemon1.name}'s attacks: 
+          <span class="type-effectiveness ${getEffectivenessClass(effectiveness1to2)}">
+            ${getEffectivenessText(effectiveness1to2)}
+          </span> vs ${pokemon2.name}
+        </p>
+        <p>${pokemon2.name}'s attacks: 
+          <span class="type-effectiveness ${getEffectivenessClass(effectiveness2to1)}">
+            ${getEffectivenessText(effectiveness2to1)}
+          </span> vs ${pokemon1.name}
+        </p>
+      </div>
+      <div class="stats-comparison">
+        <h4>Stats Comparison:</h4>
+        <p>${pokemon1.name}: ${Math.round(score1)} power</p>
+        <p>${pokemon2.name}: ${Math.round(score2)} power</p>
+      </div>
+      <div class="winner-display ${!winner ? 'draw' : ''}">
+        ${winner ? `${winner.name} wins!` : "It's a draw!"}
+      </div>
+    `;
+    
+    battleResult.style.display = 'block';
+    
+  } catch (error) {
+    console.error("Battle error:", error);
+    battleResult.innerHTML = `
+      <h3>Battle Error</h3>
+      <p>Could not complete battle simulation</p>
+      <p><small>${error.message}</small></p>
+    `;
+    battleResult.style.display = 'block';
+  } finally {
+    battleButton.disabled = false;
+    battleButton.textContent = 'Battle!';
+    pokemon1Preview.classList.remove('attacking');
+    pokemon2Preview.classList.remove('attacking');
+  }
+});
+
+    function getEffectivenessText(effectiveness) {
+      if (effectiveness === 0) return 'No Effect';
+      if (effectiveness <= 0.5) return 'Not Very Effective';
+      if (effectiveness >= 2) return 'Super Effective';
+      return 'Normal Effectiveness';
+    }
+
+    function getEffectivenessClass(effectiveness) {
+      if (effectiveness === 0) return 'no-effect';
+      if (effectiveness <= 0.5) return 'not-very-effective';
+      if (effectiveness >= 2) return 'super-effective';
+      return 'neutral';
+    }
+
+    // Fetch all Pokémon data
+    async function fetchPokemonData() {
+      try {
+        const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000");
+        const data = await res.json();
+        const promises = data.results.map(p => fetch(p.url).then(res => res.json()));
+        allPokemon = await Promise.all(promises);
+        filterPokemons();
+        populateBattleSelects(); // Populate battle selects after data loads
+      } catch (error) {
+        console.error("Error fetching Pokémon data:", error);
+      }
+    }
+
+    // Event listeners
+    searchInput.addEventListener("input", filterPokemons);
+    typeFilter.addEventListener("change", filterPokemons);
+    regionFilter.addEventListener("change", filterPokemons);
+    favoritesOnlyCheckbox.addEventListener("change", filterPokemons);
+    pokemon1Select.addEventListener('change', () => updatePreview(pokemon1Select, pokemon1Preview));
+    pokemon2Select.addEventListener('change', () => updatePreview(pokemon2Select, pokemon2Preview));
+
+    // Theme toggle
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "light") {
+        themeToggle.checked = true;
+        document.body.classList.add("light-mode");
+      }
+    });
+
+    themeToggle.addEventListener("change", () => {
+      const isLightMode = themeToggle.checked;
+      document.body.classList.toggle("light-mode", isLightMode);
+      localStorage.setItem("theme", isLightMode ? "light" : "dark");
+    });
+
+    // Initialize the app
+    fetchPokemonData();
+  </script>
 </body>
 </html>
