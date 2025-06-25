@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pokémon Battle Simulator</title>
+  <style>
+    :root {
+      --background-color: #1e1e2f;
+      --text-color: #f0f0f0;
+      --header-background: #27293d;
+      --card-background: #2e2f4e;
+      --card-type-background: #555;
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .header {
+      text-align: center;
+      padding: 1rem;
+      background-color: var(--header-background);
+      color: #fff;
+    }
+
+    .back-button {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      padding: 0.5rem 1rem;
+      background-color: #f39c12;
+      color: white;
+      text-decoration: none;
+      border-radius: 0.5rem;
+    }
+
+    .battle-section {
+      background: var(--card-background);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin: 1rem auto;
+      max-width: 800px;
+      text-align: center;
+    }
+
+    .battle-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .pokemon-selector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .battle-select {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: none;
+      min-width: 150px;
+    }
+
+    .pokemon-preview {
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pokemon-preview img {
+      width: 80px;
+      height: 80px;
+    }
+
+    .vs {
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 0 1rem;
+    }
+
+    .battle-button {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      background-color: #f39c12;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .battle-button:hover {
+      transform: scale(1.05);
+    }
+
+    .battle-result {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      background: var(--header-background);
+      display: none;
+    }
+
+    .type-effectiveness {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.5rem;
+      margin: 0.25rem;
+      font-weight: bold;
+    }
+
+    .super-effective {
+      background-color: #4CAF50;
+    }
+
+    .not-very-effective {
+      background-color: #f44336;
+    }
+
+    .neutral {
+      background-color: #2196F3;
+    }
+
+    .no-effect {
+      background-color: #757575;
+    }
+
+    .winner-display {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 1rem 0;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background: var(--card-type-background);
+    }
+
+    .winner-display.draw {
+      background: #9E9E9E;
+    }
+
+    .attacking {
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+
+    body.light-mode {
+      --background-color: #ffffff;
+      --text-color: #000000;
+      --header-background: #f0f0f0;
+      --card-background: #e0e0e0;
+      --card-type-background: #ccc;
+    }
+
+    /* Type colors (same as main page) */
+    .type-normal { background-color: #A8A77A; }
+    .type-fire { background-color: #EE8130; }
+    .type-water { background-color: #6390F0; }
+    .type-electric { background-color: #F7D02C; }
+    .type-grass { background-color: #7AC74C; }
+    .type-ice { background-color: #96D9D6; }
+    .type-fighting { background-color: #C22E28; }
+    .type-poison { background-color: #A33EA1; }
+    .type-ground { background-color: #E2BF65; }
+    .type-flying { background-color: #A98FF3; }
+    .type-psychic { background-color: #F95587; }
+    .type-bug { background-color: #A6B91A; }
+    .type-rock { background-color: #B6A136; }
+    .type-ghost { background-color: #735797; }
+    .type-dragon { background-color: #6F35FC; }
+    .type-dark { background-color: #705746; }
+    .type-steel { background-color: #B7B7CE; }
+    .type-fairy { background-color: #D685AD; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="Demo.html" class="back-button">Back to Pokédex</a>
+    <h1>Pokémon Battle Simulator</h1>
+  </div>
+
+  <div class="battle-section">
+    <div class="battle-controls">
+      <div class="pokemon-selector">
+        <select id="pokemon1Select" class="battle-select">
+          <option value="">Select Pokémon 1</option>
+        </select>
+        <div id="pokemon1Preview" class="pokemon-preview"></div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="pokemon-selector">
+        <select id="pokemon2Select" class="battle-select">
+          <option value="">Select Pokémon 2</option>
+        </select>
+        <div id="pokemon2Preview" class="pokemon-preview"></div>
+      </div>
+      <button id="battleButton" class="battle-button">Battle!</button>
+    </div>
+    <div id="battleResult" class="battle-result"></div>
+  </div>
+
+  <script>
+    // Battle simulator elements
+    const pokemon1Select = document.getElementById('pokemon1Select');
+    const pokemon2Select = document.getElementById('pokemon2Select');
+    const pokemon1Preview = document.getElementById('pokemon1Preview');
+    const pokemon2Preview = document.getElementById('pokemon2Preview');
+    const battleButton = document.getElementById('battleButton');
+    const battleResult = document.getElementById('battleResult');
+    const themeToggle = document.createElement('input');
+    themeToggle.type = 'checkbox';
+    themeToggle.id = 'themeToggle';
+
+    let allPokemon = [];
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    // Type effectiveness chart
+    const typeChart = {
+      normal: { weak: ['fighting'], resist: [], immune: ['ghost'] },
+      fire: { weak: ['water', 'ground', 'rock'], resist: ['fire', 'grass', 'ice', 'bug', 'steel', 'fairy'] },
+      water: { weak: ['electric', 'grass'], resist: ['fire', 'water', 'ice', 'steel'] },
+      electric: { weak: ['ground'], resist: ['electric', 'flying', 'steel'] },
+      grass: { weak: ['fire', 'ice', 'poison', 'flying', 'bug'], resist: ['water', 'electric', 'grass', 'ground'] },
+      ice: { weak: ['fire', 'fighting', 'rock', 'steel'], resist: ['ice'] },
+      fighting: { weak: ['flying', 'psychic', 'fairy'], resist: ['bug', 'rock', 'dark'] },
+      poison: { weak: ['ground', 'psychic'], resist: ['grass', 'fighting', 'poison', 'bug', 'fairy'] },
+      ground: { weak: ['water', 'grass', 'ice'], resist: ['poison', 'rock'], immune: ['electric'] },
+      flying: { weak: ['electric', 'ice', 'rock'], resist: ['grass', 'fighting', 'bug'], immune: ['ground'] },
+      psychic: { weak: ['bug', 'ghost', 'dark'], resist: ['fighting', 'psychic'] },
+      bug: { weak: ['fire', 'flying', 'rock'], resist: ['grass', 'fighting', 'ground'] },
+      rock: { weak: ['water', 'grass', 'fighting', 'ground', 'steel'], resist: ['normal', 'fire', 'poison', 'flying'] },
+      ghost: { weak: ['ghost', 'dark'], resist: ['poison', 'bug'], immune: ['normal', 'fighting'] },
+      dragon: { weak: ['ice', 'dragon', 'fairy'], resist: ['fire', 'water', 'electric', 'grass'] },
+      dark: { weak: ['fighting', 'bug', 'fairy'], resist: ['ghost', 'dark'], immune: ['psychic'] },
+      steel: { weak: ['fire', 'fighting', 'ground'], resist: ['normal', 'grass', 'ice', 'flying', 'psychic', 'bug', 'rock', 'dragon', 'steel', 'fairy'], immune: ['poison'] },
+      fairy: { weak: ['poison', 'steel'], resist: ['fighting', 'bug', 'dark'], immune: ['dragon'] }
+    };
+
+    // Populate battle selects with Pokémon
+    function populateBattleSelects() {
+      // Clear existing options (keeping the first "Select Pokémon" option)
+      pokemon1Select.innerHTML = '<option value="">Select Pokémon 1</option>';
+      pokemon2Select.innerHTML = '<option value="">Select Pokémon 2</option>';
+
+      // Sort Pokémon by ID number
+      const sortedPokemon = [...allPokemon].sort((a, b) => a.id - b.id);
+
+      sortedPokemon.forEach(pokemon => {
+        const option = document.createElement('option');
+        option.value = pokemon.id;
+        option.textContent = `#${pokemon.id.toString().padStart(3, '0')} ${pokemon.name}`;
+        
+        // Clone the option for both selects
+        pokemon1Select.appendChild(option.cloneNode(true));
+        pokemon2Select.appendChild(option);
+      });
+    }
+
+    // Update preview when Pokémon is selected
+    function updatePreview(selectElement, previewElement) {
+      const selectedId = selectElement.value;
+      if (!selectedId) {
+        previewElement.innerHTML = '';
+        return;
+      }
+      
+      try {
+        const pokemon = allPokemon.find(p => p.id == selectedId);
+        if (!pokemon) {
+          throw new Error("Pokémon not found");
+        }
+        
+        previewElement.innerHTML = `
+          <img src="${pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default}" 
+               alt="${pokemon.name}"
+               onerror="this.src='https://via.placeholder.com/96?text=Pokémon'">
+          <h3>${pokemon.name}</h3>
+          <div class="card-types">
+            ${pokemon.types.map(t => `<span class="card-type type-${t.type.name}">${t.type.name}</span>`).join('')}
+          </div>
+        `;
+      } catch (error) {
+        console.error("Error updating preview:", error);
+        previewElement.innerHTML = '<p>Error loading Pokémon</p>';
+      }
+    }
+
+    // Calculate type effectiveness
+    function calculateEffectiveness(attackerTypes, defenderTypes) {
+      let effectiveness = 1;
+      
+      defenderTypes.forEach(defenderType => {
+        attackerTypes.forEach(attackerType => {
+          const typeData = typeChart[defenderType];
+          if (typeData.immune && typeData.immune.includes(attackerType)) {
+            effectiveness = 0;
+            return;
+          }
+          
+          if (typeData.weak && typeData.weak.includes(attackerType)) {
+            effectiveness *= 2;
+          } else if (typeData.resist && typeData.resist.includes(attackerType)) {
+            effectiveness *= 0.5;
+          }
+        });
+      });
+      
+      return effectiveness;
+    }
+
+    function getEffectivenessText(effectiveness) {
+      if (effectiveness === 0) return 'No Effect';
+      if (effectiveness <= 0.5) return 'Not Very Effective';
+      if (effectiveness >= 2) return 'Super Effective';
+      return 'Normal Effectiveness';
+    }
+
+    function getEffectivenessClass(effectiveness) {
+      if (effectiveness === 0) return 'no-effect';
+      if (effectiveness <= 0.5) return 'not-very-effective';
+      if (effectiveness >= 2) return 'super-effective';
+      return 'neutral';
+    }
+
+    // Battle button click handler
+    battleButton.addEventListener('click', async () => {
+      const pokemon1Id = pokemon1Select.value;
+      const pokemon2Id = pokemon2Select.value;
+      
+      if (!pokemon1Id || !pokemon2Id) {
+        alert('Please select two Pokémon to battle!');
+        return;
+      }
+      
+      battleResult.style.display = 'none';
+      battleButton.disabled = true;
+      battleButton.textContent = 'Battling...';
+      
+      try {
+        const pokemon1 = allPokemon.find(p => p.id == pokemon1Id);
+        const pokemon2 = allPokemon.find(p => p.id == pokemon2Id);
+        
+        if (!pokemon1 || !pokemon2) {
+          throw new Error("One or both Pokémon not found");
+        }
+
+        // Battle animation
+        pokemon1Preview.classList.add('attacking');
+        await new Promise(resolve => setTimeout(resolve, 500));
+        pokemon2Preview.classList.add('attacking');
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const types1 = pokemon1.types.map(t => t.type.name);
+        const types2 = pokemon2.types.map(t => t.type.name);
+        
+        const effectiveness1to2 = calculateEffectiveness(types1, types2);
+        const effectiveness2to1 = calculateEffectiveness(types2, types1);
+        
+        // Calculate weighted stats
+        const statWeights = {
+          hp: 1,
+          attack: 1.2,
+          defense: 1.1,
+          'special-attack': 1.2,
+          'special-defense': 1.1,
+          speed: 1
+        };
+        
+        let score1 = pokemon1.stats.reduce((sum, stat) => 
+          sum + (stat.base_stat * (statWeights[stat.stat.name] || 1)), 0);
+        
+        let score2 = pokemon2.stats.reduce((sum, stat) => 
+          sum + (stat.base_stat * (statWeights[stat.stat.name] || 1)), 0);
+        
+        // Apply type effectiveness
+        score1 *= effectiveness1to2;
+        score2 *= effectiveness2to1;
+        
+        // Determine winner
+        let winner;
+        if (score1 > score2 * 1.1) winner = pokemon1;
+        else if (score2 > score1 * 1.1) winner = pokemon2;
+        else winner = null; // Draw
+        
+        // Display results
+        battleResult.innerHTML = `
+          <h3>Battle Results</h3>
+          <div class="type-matchups">
+            <h4>Type Effectiveness:</h4>
+            <p>${pokemon1.name}'s attacks: 
+              <span class="type-effectiveness ${getEffectivenessClass(effectiveness1to2)}">
+                ${getEffectivenessText(effectiveness1to2)}
+              </span> vs ${pokemon2.name}
+            </p>
+            <p>${pokemon2.name}'s attacks: 
+              <span class="type-effectiveness ${getEffectivenessClass(effectiveness2to1)}">
+                ${getEffectivenessText(effectiveness2to1)}
+              </span> vs ${pokemon1.name}
+            </p>
+          </div>
+          <div class="stats-comparison">
+            <h4>Stats Comparison:</h4>
+            <p>${pokemon1.name}: ${Math.round(score1)} power</p>
+            <p>${pokemon2.name}: ${Math.round(score2)} power</p>
+          </div>
+          <div class="winner-display ${!winner ? 'draw' : ''}">
+            ${winner ? `${winner.name} wins!` : "It's a draw!"}
+          </div>
+        `;
+        
+        battleResult.style.display = 'block';
+        
+      } catch (error) {
+        console.error("Battle error:", error);
+        battleResult.innerHTML = `
+          <h3>Battle Error</h3>
+          <p>Could not complete battle simulation</p>
+          <p><small>${error.message}</small></p>
+        `;
+        battleResult.style.display = 'block';
+      } finally {
+        battleButton.disabled = false;
+        battleButton.textContent = 'Battle!';
+        pokemon1Preview.classList.remove('attacking');
+        pokemon2Preview.classList.remove('attacking');
+      }
+    });
+
+    // Fetch all Pokémon data
+    async function fetchPokemonData() {
+      try {
+        const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000");
+        const data = await res.json();
+        const promises = data.results.map(p => fetch(p.url).then(res => res.json()));
+        allPokemon = await Promise.all(promises);
+        populateBattleSelects();
+      } catch (error) {
+        console.error("Error fetching Pokémon data:", error);
+      }
+    }
+
+    // Event listeners
+    pokemon1Select.addEventListener('change', () => updatePreview(pokemon1Select, pokemon1Preview));
+    pokemon2Select.addEventListener('change', () => updatePreview(pokemon2Select, pokemon2Preview));
+
+    // Theme toggle
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "light") {
+        document.body.classList.add("light-mode");
+      }
+    });
+
+    // Initialize the app
+    fetchPokemonData();
+  </script>
+</body>
+</html>
