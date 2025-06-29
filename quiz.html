@@ -42,9 +42,17 @@
         }
 
         @keyframes pulseBorder {
-            0% { border-color: var(--secondary); }
-            50% { border-color: var(--primary); }
-            100% { border-color: var(--secondary); }
+            0% {
+                border-color: var(--secondary);
+            }
+
+            50% {
+                border-color: var(--primary);
+            }
+
+            100% {
+                border-color: var(--secondary);
+            }
         }
 
         h1 {
@@ -54,7 +62,6 @@
             margin-bottom: 5px;
             font-size: 2.5em;
             background: linear-gradient(to right, #ff0000, #3b4cca);
-            /* -webkit-background-clip: text; */
             -webkit-text-fill-color: transparent;
         }
 
@@ -190,14 +197,31 @@
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
         }
 
         .disabled {
@@ -262,7 +286,6 @@
             font-size: 1.8em;
             margin: 20px 0;
             background: linear-gradient(to right, var(--primary), var(--secondary));
-            /* -webkit-background-clip: text; */
             -webkit-text-fill-color: transparent;
             font-weight: bold;
         }
@@ -383,31 +406,6 @@
             border: 2px solid var(--incorrect);
         }
 
-        .hint-btn {
-            background-color: #9C27B0;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 0.9em;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin: 10px auto 0;
-        }
-
-        .hint-text {
-            margin-top: 10px;
-            font-style: italic;
-            color: #666;
-            display: none;
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 10px;
-            border-radius: 5px;
-        }
-
         .streak-display {
             position: fixed;
             top: 20px;
@@ -428,9 +426,17 @@
         }
 
         @keyframes streak-pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         .streak-pop {
@@ -438,13 +444,25 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes slideIn {
-            from { transform: translateX(100px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         .shiny-notification {
@@ -464,54 +482,117 @@
         }
 
         @keyframes glitter {
-            0% { filter: brightness(1); }
-            50% { filter: brightness(1.3); }
-            100% { filter: brightness(1); }
+            0% {
+                filter: brightness(1);
+            }
+
+            50% {
+                filter: brightness(1.3);
+            }
+
+            100% {
+                filter: brightness(1);
+            }
         }
 
         .emoji {
             font-size: 1.2em;
         }
 
-
         .back-to-home {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    padding: 20px 30px;
-    font-size: 1.5em;
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 100;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
+            position: static;
+            top: 20px;
+            left: 20px;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-.back-to-home:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-}
+        .back-to-home:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
 
-.back-to-home:active {
-    transform: translateY(1px);
-}
+        .back-to-home:active {
+            transform: translateY(1px);
+        }
 
+        .loading {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .music-control {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            /* Center horizontally */
+            transform: translateX(-50%);
+            /* Adjust for exact center */
+            z-index: 1000;
+            text-align: center;
+            /* Ensures button stays centered */
+        }
+
+        #music-toggle {
+
+            background: rgb(255, 255, 255);
+            border: 2px solid var(--secondary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.6em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        #music-toggle:hover {
+            transform: scale(1.1);
+            background: white;
+        }
+
+        #music-toggle.playing {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        #music-toggle.muted {
+            opacity: 0.7;
+            background: rgb(255, 255, 255);
+        }
     </style>
 </head>
 
 <body>
-    
+
+    <div class="music-control">
+        <button id="music-toggle" onclick="toggleMusic()">🔇</button>
+        <audio id="bg-music" loop>
+            <source src="paglu.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <div class="div"><button class="back-to-home" onclick="window.location.href='Demo.html'">
+            ⬅️ Back to Pokédex
+        </button></div><br>
     <div class="container">
-        <button class="back-to-home" onclick="window.location.href='index.html'">
-    ⬅️ Back to Pokédex
-</button>
+
         <div class="streak-display" id="streak-display">
             🔥 Current Streak: <span class="streak-count" id="current-streak">0</span><br>
             🏆 Highest Streak: <span class="streak-count" id="highest-streak">0</span>
@@ -526,8 +607,13 @@
 
         <div class="difficulty-selector">
             <button class="difficulty-btn easy" onclick="startQuiz('easy')">Easy <span class="emoji">🌱</span></button>
-            <button class="difficulty-btn medium" onclick="startQuiz('medium')">Medium <span class="emoji">⚡</span></button>
+            <button class="difficulty-btn medium" onclick="startQuiz('medium')">Medium <span
+                    class="emoji">⚡</span></button>
             <button class="difficulty-btn hard" onclick="startQuiz('hard')">Hard <span class="emoji">🔥</span></button>
+        </div>
+
+        <div class="loading" id="loading">
+            Loading Pokémon data... <span class="emoji">🌀</span>
         </div>
 
         <div class="quiz-container" id="quiz-container">
@@ -537,7 +623,8 @@
 
             <div class="timer-container">
                 ⏱️ Time remaining: <span class="timer" id="timer">60</span>s
-                <span id="time-bonus-indicator" style="display:none;">(+<span id="time-bonus-value">0</span> time bonus <span class="emoji">🎯</span>)</span>
+                <span id="time-bonus-indicator" style="display:none;">(+<span id="time-bonus-value">0</span> time bonus
+                    <span class="emoji">🎯</span>)</span>
             </div>
 
             <div class="question-container">
@@ -548,10 +635,6 @@
 
                 <div id="feedback" class="feedback"></div>
 
-                <button class="hint-btn" id="hint-btn" onclick="showHint()">
-                    <span class="emoji">💡</span> Show Hint
-                </button>
-                <div class="hint-text" id="hint-text"></div>
             </div>
 
             <div class="controls">
@@ -561,16 +644,13 @@
                 <button class="quiz-btn restart-btn" onclick="restartQuiz()">
                     <span class="emoji">🔄</span> Restart
                 </button>
-                <button class="quiz-btn next-btn" id="next-btn" onclick="nextQuestion()"
-                    style="display:none;">
+                <button class="quiz-btn next-btn" id="next-btn" onclick="nextQuestion()" style="display:none;">
                     <span class="emoji">➡️</span> Next
                 </button>
-                <button class="quiz-btn submit-btn" id="submit-btn" onclick="submitQuiz()"
-                    style="display:none;">
+                <button class="quiz-btn submit-btn" id="submit-btn" onclick="submitQuiz()" style="display:none;">
                     <span class="emoji">🏁</span> Submit
                 </button>
             </div>
-
         </div>
 
         <div class="result" id="result">
@@ -609,276 +689,16 @@
         </div>
     </div>
 
-    <script>
-        // Enhanced Quiz Questions - Replace with your own!
-        const quizQuestions = {
-            easy: [
-                {
-                    question: "What is the first Pokémon in the Pokédex? #️⃣1️⃣",
-                    options: ["Bulbasaur 🌱", "Mew ✨", "Pikachu ⚡", "Arceus ✝️"],
-                    answer: "Bulbasaur 🌱",
-                    hint: "It's a Grass/Poison type",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
-                },
-                {
-                    question: "Which Pokémon evolves into Charizard? 🐉",
-                    options: ["Charmander 🔥", "Squirtle 💧", "Bulbasaur 🌱", "Pikachu ⚡"],
-                    answer: "Charmander 🔥",
-                    hint: "It's a Fire type starter",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png"
-                },
-                {
-                    question: "Which Pokémon is the mascot of the Pokémon franchise? 🏆",
-                    options: ["Pikachu ⚡", "Charizard 🐉", "Bulbasaur 🌱", "Squirtle 💧"],
-                    answer: "Pikachu ⚡",
-                    hint: "Ash's companion",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
-                },
-                {
-                    question: "Which Pokémon is a water-type and a turtle? 🐢",
-                    options: ["Squirtle 💧", "Totodile 🐊", "Piplup 🐧", "Mudkip 🐟"],
-                    answer: "Squirtle 💧",
-                    hint: "Kanto water starter",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png"
-                },
-                {
-                    question: "Which Pokémon looks like a pink balloon? 🎈",
-                    options: ["Jigglypuff 🎤", "Clefairy 🌟", "Chansey 🥚", "Ditto ✨"],
-                    answer: "Jigglypuff 🎤",
-                    hint: "It sings and puts you to sleep",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/39.png"
-                },
-                {
-                    question: "Which Pokémon has a flame-shaped tail and is a Fire-type starter? 🔥",
-                    options: ["Charmander 🔥", "Torchic 🔥", "Cyndaquil 🔥", "Tepig 🔥"],
-                    answer: "Charmander 🔥",
-                    hint: "It evolves into Charizard",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png"
-                },
-                {
-                    question: "Which Pokémon is a yellow electric-type and evolves from Pichu? ⚡",
-                    options: ["Pikachu ⚡", "Jolteon ⚡", "Electrike ⚡", "Zapdos ⚡"],
-                    answer: "Pikachu ⚡",
-                    hint: "It uses Thunderbolt",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
-                },
-                {
-                    question: "Which Pokémon is a blue turtle-like creature? 🐢",
-                    options: ["Squirtle 💧", "Totodile 🐊", "Mudkip 🐟", "Poliwag 🐸"],
-                    answer: "Squirtle 💧",
-                    hint: "It's a starter from the Kanto region",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png"
-                },
-                {
-                    question: "Which Pokémon resembles a cat and is part of Team Rocket? 🐱",
-                    options: ["Meowth 💰", "Persian 👑", "Espurr 👁️", "Purrloin 🎭"],
-                    answer: "Meowth 💰",
-                    hint: "It can talk in the anime",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/52.png"
-                },
-                {
-                    question: "Which Pokémon is a flying Normal-type and resembles a bird? 🐦",
-                    options: ["Pidgey 🕊️", "Spearow 🦅", "Starly 🐦", "Fletchling 🔥"],
-                    answer: "Pidgey 🕊️",
-                    hint: "One of the earliest bird Pokémon",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/16.png"
-                }
-            ],
-            medium: [
-                {
-                    question: "Which Pokémon is number #025 in the Pokédex? #️⃣2️⃣5️⃣",
-                    options: ["Pikachu ⚡", "Raichu ⚡", "Pichu ⚡", "Plusle ⚡"],
-                    answer: "Pikachu ⚡",
-                    hint: "Its pre-evolution was introduced in Generation 2",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
-                },
-                {
-                    question: "Which type is super effective against Water type Pokémon? 💧",
-                    options: ["Electric ⚡", "Fire 🔥", "Grass 🌱", "Fighting 🥊"],
-                    answer: "Electric ⚡",
-                    hint: "This type is also super effective against Flying"
-                },
-                {
-                    question: "Who's that Pokémon? ❓",
-                    options: ["Dragonite 🐉", "Charizard 🐉", "Gyarados 🌊", "Salamence 🐉"],
-                    answer: "Dragonite 🐉",
-                    hint: "It's a Dragon/Flying type",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/149.png",
-                    silhouette: true
-                },
-                {
-                    question: "Which Pokémon is a Fire/Flying type in its final evolution? 🔥",
-                    options: ["Charizard 🐉", "Blaziken 🥋", "Talonflame 🦅", "Infernape 🐒"],
-                    answer: "Charizard 🐉",
-                    hint: "It evolves from Charmander",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png"
-                },
-                {
-                    question: "Which region is Lucario originally from? 🗺️",
-                    options: ["Sinnoh ❄️", "Johto 🍁", "Hoenn 🌴", "Unova 🏙️"],
-                    answer: "Sinnoh ❄️",
-                    hint: "Also the home of Dialga and Palkia",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/448.png"
-                },
-                {
-                    question: "Which Pokémon evolves into Gyarados? 🌊",
-                    options: ["Magikarp 🐟", "Feebas 🐟", "Carvanha 🦈", "Wishiwashi 🐟"],
-                    answer: "Magikarp 🐟",
-                    hint: "Famously useless at first",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/129.png"
-                },
-                {
-                    question: "Which type is super effective against Psychic? 🔮",
-                    options: ["Dark 🌑", "Water 💧", "Fire 🔥", "Fairy ✨"],
-                    answer: "Dark 🌑",
-                    hint: "Introduced in Gen 2 to balance Psychic",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/302.png"
-                },
-                {
-                    question: "What stone is used to evolve Eevee into Vaporeon? 💎",
-                    options: ["Water Stone 💧", "Fire Stone 🔥", "Thunder Stone ⚡", "Moon Stone 🌙"],
-                    answer: "Water Stone 💧",
-                    hint: "Found near bodies of water",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/134.png"
-                },
-                {
-                    question: "Which Pokémon is known as the 'Genetic Pokémon'? 🧬",
-                    options: ["Mewtwo 🧠", "Mew ✨", "Genesect 🦗", "Deoxys 🧬"],
-                    answer: "Mewtwo 🧠",
-                    hint: "Created from Mew's DNA",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png"
-                },
-                {
-                    question: "Which Pokémon evolves using a Leaf Stone? 🍃",
-                    options: ["Gloom 🌸", "Ivysaur 🌱", "Chikorita 🍃", "Oddish 🌱"],
-                    answer: "Gloom 🌸",
-                    hint: "Turns into Vileplume",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/44.png"
-                },
-                {
-                    question: "Which dual-type Pokémon is both Bug and Flying? 🐛",
-                    options: ["Butterfree 🦋", "Beedrill 🐝", "Scyther 🦗", "Yanma 🦟"],
-                    answer: "Butterfree 🦋",
-                    hint: "Final form of Caterpie",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/12.png"
-                },
-                {
-                    question: "Which Pokémon evolves from Eevee using a Thunder Stone? ⚡",
-                    options: ["Jolteon ⚡", "Electivire ⚡", "Raichu ⚡", "Ampharos ⚡"],
-                    answer: "Jolteon ⚡",
-                    hint: "Electric-type evolution",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/135.png"
-                },
-                {
-                    question: "Which Pokémon has the ability to float and is Ghost-type? 👻",
-                    options: ["Gastly ☁️", "Haunter 👻", "Misdreavus 👻", "Drifloon 🎈"],
-                    answer: "Gastly ☁️",
-                    hint: "Part of a classic trio",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/92.png"
-                }
-            ],
-            hard: [
-                {
-                    question: "Which Pokémon has the highest base stat total in Generation I? 📊",
-                    options: ["Mewtwo 🧠", "Dragonite 🐉", "Mew ✨", "Arcanine 🐕"],
-                    answer: "Mewtwo 🧠",
-                    hint: "It was created through genetic engineering",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png"
-                },
-                {
-                    question: "Which of these Pokémon is NOT a Legendary Pokémon? ❌",
-                    options: ["Lucario 🥋", "Articuno ❄️", "Zapdos ⚡", "Moltres 🔥"],
-                    answer: "Lucario 🥋",
-                    hint: "This Pokémon is a Fighting/Steel type",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/448.png"
-                },
-                {
-                    question: "Which Pokémon has the ability 'Wonder Guard'? 🛡️",
-                    options: ["Shedinja 🐛", "Ninjask 🦗", "Scizor 🦂", "Pinsir 🦗"],
-                    answer: "Shedinja 🐛",
-                    hint: "It has exactly 1 HP",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/292.png"
-                },
-                {
-                    question: "Which Pokémon is known for rewriting reality in the Distortion World? 🌌",
-                    options: ["Giratina 🐉", "Darkrai 🌑", "Palkia 🌌", "Hoopa ✨"],
-                    answer: "Giratina 🐉",
-                    hint: "Ghost/Dragon type",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/487.png"
-                },
-                {
-                    question: "Which Pokémon holds the ability 'Protean'? 🎭",
-                    options: ["Greninja 🐸", "Kecleon 🦎", "Zoroark 🦊", "Ditto ✨"],
-                    answer: "Greninja 🐸",
-                    hint: "Water/Dark ninja frog",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/658.png"
-                },
-                {
-                    question: "Which Pokémon is #151 in the National Pokédex? #️⃣1️⃣5️⃣1️⃣",
-                    options: ["Mew ✨", "Mewtwo 🧠", "Celebi 🌿", "Jirachi ✨"],
-                    answer: "Mew ✨",
-                    hint: "The ancestor of all Pokémon",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/151.png"
-                },
-                {
-                    question: "Which Pokémon is exclusive to the Moon version in Gen 7? 🌙",
-                    options: ["Lunala 🦇", "Solgaleo 🦁", "Necrozma ✨", "Zeraora ⚡"],
-                    answer: "Lunala 🦇",
-                    hint: "Legendary bat-like Psychic/Ghost type",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/792.png"
-                },
-                {
-                    question: "Which mythical Pokémon was distributed with the 20th anniversary? 🎂",
-                    options: ["Celebi 🌿", "Jirachi ✨", "Victini ✨", "Meloetta 🎶"],
-                    answer: "Victini ✨",
-                    hint: "Known for guaranteeing victory",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/494.png"
-                },
-                {
-                    question: "Which Pokémon is a Dragon/Steel type from the Sinnoh region? 🐉",
-                    options: ["Dialga ⏳", "Palkia 🌌", "Rayquaza 🐉", "Garchomp 🦈"],
-                    answer: "Dialga ⏳",
-                    hint: "It controls time",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/483.png"
-                },
-                {
-                    question: "Which Pokémon is a Fossil Pokémon and evolves from Dome Fossil? 🦴",
-                    options: ["Kabuto 🦀", "Omanyte 🐌", "Tirtouga 🐢", "Cranidos 🦖"],
-                    answer: "Kabuto 🦀",
-                    hint: "It evolves into Kabutops",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/140.png"
-                },
-                {
-                    question: "Which Pokémon is based on a sword and has a Ghost/Steel typing? ⚔️",
-                    options: ["Honedge ⚔️", "Doublade ⚔️", "Aegislash 🛡️", "Cofagrigus 🏺"],
-                    answer: "Honedge ⚔️",
-                    hint: "Its ribbon can drain life force",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/679.png"
-                },
-                {
-                    question: "Which Legendary Pokémon is part of the Weather Trio? ⛅",
-                    options: ["Rayquaza 🐉", "Kyogre 🌊", "Groudon 🌋", "All of the above ✅"],
-                    answer: "All of the above ✅",
-                    hint: "They rule over sky, sea, and land",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/384.png"
-                },
-                {
-                    question: "Which Pokémon was first introduced as #494 in the National Pokédex? #️⃣4️⃣9️⃣4️⃣",
-                    options: ["Victini ✨", "Zekrom ⚡", "Reshiram 🔥", "Keldeo 🦄"],
-                    answer: "Victini ✨",
-                    hint: "Mythical Pokémon of Victory",
-                    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/494.png"
-                }
-            ]
-        };
 
+
+    <script>
         // Quiz variables
         let currentDifficulty = '';
         let currentQuestionIndex = 0;
         let score = 0;
         let selectedOptions = [];
         let timer;
-        let timeLeft = 60;
+        let timeLeft = 20;
         let quizStartTime;
         let hintsUsed = 0;
         let correctAnswers = 0;
@@ -886,6 +706,23 @@
         let currentStreak = 0;
         let highestStreak = 0;
         let timeBonus = 0;
+        let questions = [];
+
+        // Fallback Pokémon data
+        const fallbackPokemon = [
+            { id: 1, name: "bulbasaur", types: [{ type: { name: "grass" } }, { type: { name: "poison" } }], sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" }, species: { url: "" } },
+            { id: 4, name: "charmander", types: [{ type: { name: "fire" } }], sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png" }, species: { url: "" } },
+            { id: 7, name: "squirtle", types: [{ type: { name: "water" } }], sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png" }, species: { url: "" } },
+            { id: 25, name: "pikachu", types: [{ type: { name: "electric" } }], sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" }, species: { url: "" } }
+        ];
+
+        // Types of questions
+        const questionTypes = [
+            "Who's that Pokémon?",
+            "What type is {pokemon}?",
+            "What is {pokemon}'s Pokédex number?",
+            "Which generation does {pokemon} belong to?"
+        ];
 
         // Sound effects
         const sounds = {
@@ -902,7 +739,7 @@
         }
 
         // Start the quiz with selected difficulty
-        function startQuiz(difficulty) {
+        async function startQuiz(difficulty) {
             currentDifficulty = difficulty;
             currentQuestionIndex = 0;
             score = 0;
@@ -911,12 +748,38 @@
             correctAnswers = 0;
             incorrectAnswers = 0;
             currentStreak = 0;
-            timeLeft = 60;
+            timeLeft = 20;
             timeBonus = 0;
 
-            document.getElementById('quiz-container').style.display = 'block';
+            // Show loading indicator
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('quiz-container').style.display = 'none';
             document.getElementById('result').style.display = 'none';
             document.querySelector('.difficulty-selector').style.display = 'none';
+
+            // Generate 5 random questions (reduced for testing)
+            questions = [];
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const question = await generateQuestion();
+                    questions.push(question);
+                } catch (error) {
+                    console.error("Error generating question:", error);
+                    // Use fallback question if API fails
+                    const randomPokemon = fallbackPokemon[Math.floor(Math.random() * fallbackPokemon.length)];
+                    questions.push({
+                        question: "Who's that Pokémon?",
+                        options: ["Pikachu", "Bulbasaur", "Charmander", "Squirtle"],
+                        answer: randomPokemon.name,
+                        image: randomPokemon.sprites.front_default,
+                        silhouette: true
+                    });
+                }
+            }
+
+            // Hide loading and show quiz
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
             document.getElementById('streak-display').style.display = 'block';
             document.getElementById('current-streak').textContent = '0';
             document.getElementById('highest-streak').textContent = '0';
@@ -928,6 +791,146 @@
             quizStartTime = new Date().getTime();
 
             loadQuestion();
+        }
+
+        // Generate a random Pokémon question
+        async function generateQuestion() {
+            try {
+                // Get a random Pokémon from first 151 (original) for better reliability
+                const randomId = Math.floor(Math.random() * 151) + 1;
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch Pokémon");
+                }
+
+                const pokemon = await response.json();
+
+                // Get species data for generation info
+                let generation = "1"; // Default to Gen 1
+                try {
+                    const speciesResponse = await fetch(pokemon.species.url);
+                    if (speciesResponse.ok) {
+                        const speciesData = await speciesResponse.json();
+                        generation = speciesData.generation.name.match(/\d+/)[0];
+                    }
+                } catch (e) {
+                    console.log("Couldn't fetch species data, using default generation");
+                }
+
+                // Determine question type
+                const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+                let questionText, correctAnswer, options = [];
+
+                switch (questionType) {
+                    case "Who's that Pokémon?":
+                        questionText = "Who's that Pokémon?";
+                        correctAnswer = pokemon.name;
+                        options = await generateNameOptions(correctAnswer);
+                        break;
+
+                    case "What type is {pokemon}?":
+                        questionText = `What type is ${pokemon.name}?`;
+                        correctAnswer = pokemon.types.map(t => t.type.name).join("/");
+                        options = await generateTypeOptions(correctAnswer);
+                        break;
+
+                    case "What is {pokemon}'s Pokédex number?":
+                        questionText = `What is ${pokemon.name}'s Pokédex number?`;
+                        correctAnswer = pokemon.id.toString();
+                        options = generateNumberOptions(pokemon.id);
+                        break;
+
+                    case "Which generation does {pokemon} belong to?":
+                        questionText = `Which generation does ${pokemon.name} belong to?`;
+                        correctAnswer = generation;
+                        options = generateGenerationOptions(generation);
+                        break;
+                }
+
+                return {
+                    question: questionText,
+                    options: options,
+                    answer: correctAnswer,
+                    image: pokemon.sprites.front_default,
+                    silhouette: questionType === "Who's that Pokémon?"
+                };
+            } catch (error) {
+                console.error("Error generating question:", error);
+                // Return a fallback question if there's any error
+                const randomPokemon = fallbackPokemon[Math.floor(Math.random() * fallbackPokemon.length)];
+                return {
+                    question: "Who's that Pokémon?",
+                    options: ["Pikachu", "Bulbasaur", "Charmander", "Squirtle"],
+                    answer: randomPokemon.name,
+                    image: randomPokemon.sprites.front_default,
+                    silhouette: true
+                };
+            }
+        }
+
+        // Helper functions to generate options
+        async function generateNameOptions(correctName) {
+            const options = [correctName];
+
+            // Get 3 random Pokémon names from fallback first
+            while (options.length < 4) {
+                const randomPokemon = fallbackPokemon[Math.floor(Math.random() * fallbackPokemon.length)];
+                if (!options.includes(randomPokemon.name)) {
+                    options.push(randomPokemon.name);
+                }
+            }
+
+            return shuffleArray(options);
+        }
+
+        async function generateTypeOptions(correctType) {
+            const allTypes = ["normal", "fire", "water", "electric", "grass", "ice",
+                "fighting", "poison", "ground", "flying", "psychic",
+                "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"];
+
+            const options = [correctType];
+
+            while (options.length < 4) {
+                const randomType = allTypes[Math.floor(Math.random() * allTypes.length)];
+                if (!options.includes(randomType)) {
+                    options.push(randomType);
+                }
+            }
+
+            return shuffleArray(options);
+        }
+
+        function generateNumberOptions(correctId) {
+            const options = [correctId.toString()];
+
+            while (options.length < 4) {
+                // Generate numbers close to the correct ID for more plausible options
+                const randomNum = correctId + Math.floor(Math.random() * 50) - 25;
+                if (randomNum > 0 && !options.includes(randomNum.toString())) {
+                    options.push(randomNum.toString());
+                }
+            }
+
+            return shuffleArray(options);
+        }
+
+        function generateGenerationOptions(correctGen) {
+            const options = [correctGen];
+
+            while (options.length < 4) {
+                const randomGen = (Math.floor(Math.random() * 9) + 1).toString();
+                if (!options.includes(randomGen)) {
+                    options.push(randomGen);
+                }
+            }
+
+            return shuffleArray(options);
+        }
+
+        // Utility function to shuffle array
+        function shuffleArray(array) {
+            return array.sort(() => Math.random() - 0.5);
         }
 
         // Start the countdown timer
@@ -966,7 +969,7 @@
             document.getElementById('feedback').textContent = "⏰ Time's up!";
             document.getElementById('feedback').style.display = 'block';
 
-            if (currentQuestionIndex < quizQuestions[currentDifficulty].length - 1) {
+            if (currentQuestionIndex < questions.length - 1) {
                 document.getElementById('next-btn').style.display = 'block';
             } else {
                 document.getElementById('submit-btn').style.display = 'block';
@@ -975,7 +978,6 @@
 
         // Load the current question
         function loadQuestion() {
-            const questions = quizQuestions[currentDifficulty];
             const question = questions[currentQuestionIndex];
 
             document.getElementById('question').textContent = question.question;
@@ -987,7 +989,7 @@
                 // 5% chance for shiny Pokémon
                 const isShiny = Math.random() < 0.05;
                 let imageUrl = question.image;
-                
+
                 if (isShiny) {
                     imageUrl = imageUrl.replace('/sprites/', '/sprites/shiny/');
                     document.getElementById('shiny-notification').style.display = 'block';
@@ -996,7 +998,7 @@
                     }, 2000);
                     playSound('shiny');
                 }
-                
+
                 imageElement.src = imageUrl;
                 imageElement.style.display = 'block';
 
@@ -1009,21 +1011,13 @@
                 imageElement.style.display = 'none';
             }
 
-            // Reset hint
-            document.getElementById('hint-text').style.display = 'none';
-            document.getElementById('hint-text').textContent = question.hint || "No hint available";
-            document.getElementById('hint-btn').style.display = 'block';
-
             // Reset feedback
             document.getElementById('feedback').style.display = 'none';
 
             const optionsContainer = document.getElementById('options');
             optionsContainer.innerHTML = '';
 
-            // Shuffle options to randomize their order
-            const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
-
-            shuffledOptions.forEach(option => {
+            question.options.forEach(option => {
                 const button = document.createElement('button');
                 button.className = 'option-btn';
                 button.textContent = option;
@@ -1039,20 +1033,11 @@
 
             // Hide/show next/submit buttons
             document.getElementById('next-btn').style.display = 'none';
-            document.getElementById('submit-btn').style.display = currentQuestionIndex === questions.length - 1 ? 'none' : 'none';
-        }
-
-        // Show hint for current question
-        function showHint() {
-            document.getElementById('hint-text').style.display = 'block';
-            document.getElementById('hint-btn').style.display = 'none';
-            hintsUsed++;
-            playSound('select');
+            document.getElementById('submit-btn').style.display = 'none';
         }
 
         // Handle option selection
         function selectOption(selectedOption) {
-            const questions = quizQuestions[currentDifficulty];
             const question = questions[currentQuestionIndex];
 
             // Disable all option buttons
@@ -1078,14 +1063,14 @@
             // Calculate time bonus (1 point per 10 seconds remaining)
             timeBonus = Math.floor(timeLeft / 10);
             document.getElementById('time-bonus-value').textContent = timeBonus;
-            
+
             // Update score if correct
             if (selectedOption === question.answer) {
-                score++;
+                score += 1 + timeBonus;
                 correctAnswers++;
                 currentStreak++;
                 if (currentStreak > highestStreak) highestStreak = currentStreak;
-                
+
                 // Update streak display with animation
                 document.getElementById('current-streak').textContent = currentStreak;
                 document.getElementById('highest-streak').textContent = highestStreak;
@@ -1093,7 +1078,7 @@
                 setTimeout(() => {
                     document.getElementById('streak-display').classList.remove('streak-pop');
                 }, 500);
-                
+
                 showFeedback(`✅ Correct! (+${timeBonus} time bonus 🎯)`, true);
                 playSound('correct');
             } else {
@@ -1139,25 +1124,28 @@
         // Move to next question
         function nextQuestion() {
             currentQuestionIndex++;
+            timeLeft = 20; // Reset timer for next question
             timeBonus = 0;
             document.getElementById('time-bonus-indicator').style.display = 'none';
             loadQuestion();
             playSound('select');
+
+            // Restart timer
+            clearInterval(timer);
+            startTimer();
         }
 
         // Submit the quiz
         function submitQuiz() {
             clearInterval(timer);
 
-            const questions = quizQuestions[currentDifficulty];
             const timeTaken = Math.floor((new Date().getTime() - quizStartTime) / 1000);
-            const finalScore = score + timeBonus;
 
             // Save high score
             const highScores = JSON.parse(localStorage.getItem('pokemonQuizHighScores')) || {};
-            if (!highScores[currentDifficulty] || finalScore > highScores[currentDifficulty].score) {
+            if (!highScores[currentDifficulty] || score > highScores[currentDifficulty].score) {
                 highScores[currentDifficulty] = {
-                    score: finalScore,
+                    score: score,
                     date: new Date().toLocaleDateString()
                 };
                 localStorage.setItem('pokemonQuizHighScores', JSON.stringify(highScores));
@@ -1165,7 +1153,7 @@
 
             document.getElementById('quiz-container').style.display = 'none';
             document.getElementById('result').style.display = 'block';
-            document.getElementById('score').textContent = finalScore;
+            document.getElementById('score').textContent = score;
             document.getElementById('total-questions').textContent = questions.length;
             document.getElementById('correct-answers').textContent = correctAnswers;
             document.getElementById('incorrect-answers').textContent = incorrectAnswers;
@@ -1182,6 +1170,61 @@
             document.getElementById('streak-display').style.display = 'none';
             clearInterval(timer);
         }
+
+        // Music control
+        const music = document.getElementById('bg-music');
+        const toggleBtn = document.getElementById('music-toggle');
+
+        // Set initial volume
+        music.volume = 0.3;
+
+        // Try to autoplay when page loads
+        function attemptAutoplay() {
+            const playPromise = music.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    // Autoplay succeeded
+                    toggleBtn.textContent = '🎵';
+                    toggleBtn.classList.add('playing');
+                    toggleBtn.classList.remove('muted');
+                }).catch(error => {
+                    // Autoplay was prevented
+                    toggleBtn.textContent = '🔇';
+                    toggleBtn.classList.add('muted');
+                    toggleBtn.classList.remove('playing');
+                });
+            }
+        }
+
+        // Toggle music play/pause
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                toggleBtn.textContent = '🎵';
+                toggleBtn.classList.add('playing');
+                toggleBtn.classList.remove('muted');
+            } else {
+                music.pause();
+                toggleBtn.textContent = '🔇';
+                toggleBtn.classList.add('muted');
+                toggleBtn.classList.remove('playing');
+            }
+        }
+
+        // Attempt autoplay when page loads
+        window.addEventListener('DOMContentLoaded', attemptAutoplay);
+
+        // Also try when window fully loads (some browsers need this)
+        window.addEventListener('load', attemptAutoplay);
+
+        // Make functions available globally
+        window.startQuiz = startQuiz;
+        window.goBack = goBack;
+        window.nextQuestion = nextQuestion;
+        window.submitQuiz = submitQuiz;
+        window.restartQuiz = restartQuiz;
     </script>
 </body>
+
 </html>
