@@ -7,6 +7,13 @@
   <title>Advanced Pokédex</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+
+<!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\     CSS     \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-->
+
+
+
   <style>
     #introImageOverlay {
       position: fixed;
@@ -165,7 +172,6 @@
       transform: translateY(-2px);
     }
 
-    /* Rest of your existing styles... */
     .grid-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -437,10 +443,181 @@
         justify-content: space-between;
       }
     }
+
+
+/* Sound function */
+
+.sound-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin: 5px;
+  font-size: 24px;
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.sound-button:hover {
+  transform: scale(1.1);
+}
+
+
+
+
+/* Quiz Section Styles */
+.quiz-section {
+  background: linear-gradient(135deg, #e71d36 0%, #6b0f1a 100%);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 25px 0;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  border: 4px solid #ffde00;
+  position: relative;
+  overflow: hidden;
+}
+
+.quiz-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(90deg, 
+    #ffde00 0%, #ffde00 20%,
+    #e71d36 20%, #e71d36 40%,
+    #ffde00 40%, #ffde00 60%,
+    #e71d36 60%, #e71d36 80%,
+    #ffde00 80%, #ffde00 100%);
+}
+
+.block-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.block-header h2 {
+  color: #ffde00;
+  text-shadow: 2px 2px 0 #000;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.block-decoration {
+  flex-grow: 1;
+  height: 3px;
+  background: linear-gradient(90deg, #ffde00, transparent);
+  margin-left: 15px;
+}
+
+.quiz-content {
+  text-align: center;
+  color: white;
+}
+
+.quiz-preview {
+  max-width: 200px;
+  border: 3px solid #ffde00;
+  border-radius: 10px;
+  margin: 0 auto 15px;
+}
+
+.quiz-button {
+  display: inline-flex;
+  align-items: center;
+  background: #ffde00;
+  color: #e71d36;
+  padding: 12px 25px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 15px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 4px 0 #c5a900, 0 5px 10px rgba(0,0,0,0.2);
+}
+
+.quiz-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #c5a900, 0 8px 15px rgba(0,0,0,0.3);
+}
+
+.quiz-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 #c5a900;
+}
+
+.button-light {
+  width: 12px;
+  height: 12px;
+  background: #e71d36;
+  border-radius: 50%;
+  margin-left: 10px;
+  position: relative;
+}
+
+.button-light::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  border: 1px solid #ffde00;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  70% { transform: scale(1.5); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes sectionPopUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
   </style>
 </head>
 
+
+
+
+<!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\     HTML     \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
+
+
+
+
+
+
 <body>
+
+  <!-- Sound function  -->
+
+<button id="soundButton" class="sound-button" aria-label="Mute sound">
+  <span id="soundIcon">🔊</span>
+</button>
+
+<audio id="pokemonSound" loop>
+  <source src="pokemon-cry.mp3" type="audio/mpeg">
+  Your browser does not support audio
+</audio>
+
+
+
+
 
   <div id="introImageOverlay">
     <img src="poke-image.jpg" alt="Welcome Image" />
@@ -545,7 +722,116 @@
     </div>
   </div>
 
+  <!-- Quiz Section -->
+<section class="pokedex-block quiz-section">
+  <div class="block-header">
+    <h2>Pokémon Quiz Challenge</h2>
+    <div class="block-decoration"></div>
+  </div>
+  
+  <div class="quiz-content">
+    <img src="quiz.jpg" alt="Quiz preview" class="quiz-preview">
+    <p>Test your Pokémon knowledge with our interactive quiz!</p>
+    
+    <a href="quiz.html" class="quiz-button">
+      <span>Play Quiz</span>
+      <div class="button-light"></div>
+    </a>
+  </div>
+</section>
+
+
+<!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\    JS        \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-->
+
+
+
   <script>
+
+// Quiz 
+
+// Add subtle animation when quiz section comes into view
+document.addEventListener('DOMContentLoaded', function() {
+  const quizSection = document.querySelector('.quiz-section');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animation = 'sectionPopUp 0.6s ease-out forwards';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  if (quizSection) {
+    observer.observe(quizSection);
+  }
+});
+
+
+
+
+// Sound function
+
+document.addEventListener('DOMContentLoaded', () => {
+  const soundButton = document.getElementById('soundButton');
+  const soundIcon = document.getElementById('soundIcon');
+  const pokemonSound = document.getElementById('pokemonSound');
+  
+  // Auto-play with loop on page load (with user interaction requirement)
+  function initSound() {
+    // Required for Chrome autoplay policy
+    const playPromise = pokemonSound.play();
+    
+    if (playPromise !== undefined) {
+      playPromise
+        .then(_ => {
+          soundIcon.textContent = '🔊';
+          soundButton.setAttribute('aria-label', 'Mute sound');
+        })
+        .catch(error => {
+          // Auto-play was prevented, show muted state
+          soundIcon.textContent = '🔇';
+          soundButton.setAttribute('aria-label', 'Unmute sound');
+          console.log("Auto-play prevented. User must interact first.");
+        });
+    }
+  }
+
+  // Toggle sound function
+  function toggleSound() {
+    if (pokemonSound.paused) {
+      pokemonSound.play()
+        .then(() => {
+          soundIcon.textContent = '🔊';
+          soundButton.setAttribute('aria-label', 'Mute sound');
+        })
+        .catch(error => {
+          console.error("Playback failed:", error);
+        });
+    } else {
+      pokemonSound.pause();
+      soundIcon.textContent = '🔇';
+      soundButton.setAttribute('aria-label', 'Unmute sound');
+    }
+  }
+
+  // Event listeners
+  soundButton.addEventListener('click', toggleSound);
+  
+  // Initialize sound (will work after any user interaction)
+  document.body.addEventListener('click', initSound, { once: true });
+  
+  // Optional: Handle when sound ends (though it's looping)
+  pokemonSound.addEventListener('ended', () => {
+    soundIcon.textContent = '🔇';
+  });
+});
+
+
+
+
+
+
+
 
 
     window.onload = function () {
