@@ -448,6 +448,7 @@
 /* Sound function */
 
 .sound-button {
+position:absolute;
   background: none;
   border: none;
   cursor: pointer;
@@ -610,13 +611,13 @@
   <span id="soundIcon">🔊</span>
 </button>
 
-<audio id="pokemonSound" loop>
+<!-- <audio id="pokemonSound" loop>
   <source src="pokemon-cry.mp3" type="audio/mpeg">
-  Your browser does not support audio
+</audio> -->
+<!-- Audio element with preload -->
+<audio id="pokemonSound" loop preload="auto">
+  <source src="pokemon-cry.mp3" type="audio/mpeg">
 </audio>
-
-
-
 
 
   <div id="introImageOverlay">
@@ -768,65 +769,61 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-// Sound function
-
 document.addEventListener('DOMContentLoaded', () => {
   const soundButton = document.getElementById('soundButton');
   const soundIcon = document.getElementById('soundIcon');
   const pokemonSound = document.getElementById('pokemonSound');
   
-  // Auto-play with loop on page load (with user interaction requirement)
-  function initSound() {
-    // Required for Chrome autoplay policy
+  // Set volume (30% volume)
+  pokemonSound.volume = 0.3;
+
+  // Workaround for autoplay restrictions
+  function startAudio() {
+    // First try playing normally
     const playPromise = pokemonSound.play();
     
     if (playPromise !== undefined) {
       playPromise
-        .then(_ => {
-          soundIcon.textContent = '🔊';
-          soundButton.setAttribute('aria-label', 'Mute sound');
-        })
-        .catch(error => {
-          // Auto-play was prevented, show muted state
-          soundIcon.textContent = '🔇';
-          soundButton.setAttribute('aria-label', 'Unmute sound');
-          console.log("Auto-play prevented. User must interact first.");
-        });
-    }
-  }
-
-  // Toggle sound function
-  function toggleSound() {
-    if (pokemonSound.paused) {
-      pokemonSound.play()
         .then(() => {
           soundIcon.textContent = '🔊';
           soundButton.setAttribute('aria-label', 'Mute sound');
         })
         .catch(error => {
-          console.error("Playback failed:", error);
+          // If blocked, try the Web Audio API workaround
+          tryWebAudioWorkaround();
         });
-    } else {
-      pokemonSound.pause();
-      soundIcon.textContent = '🔇';
-      soundButton.setAttribute('aria-label', 'Unmute sound');
     }
   }
 
-  // Event listeners
-  soundButton.addEventListener('click', toggleSound);
+  // Alternative method using Web Audio API
+  function tryWebAudioWorkaround() {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const source = audioContext.createMediaElementSource(pokemonSound);
+    source.connect(audioContext.destination);
+    
+    // Resume audio context (required in some browsers)
+    audioContext.resume().then(() => {
+      pokemonSound.play().then(() => {
+        soundIcon.textContent = '🔊';
+        soundButton.setAttribute('aria-label', 'Mute sound');
+      });
+    });
+  }
+
+  // Start audio immediately
+  startAudio();
   
-  // Initialize sound (will work after any user interaction)
-  document.body.addEventListener('click', initSound, { once: true });
-  
-  // Optional: Handle when sound ends (though it's looping)
-  pokemonSound.addEventListener('ended', () => {
-    soundIcon.textContent = '🔇';
+  // Toggle sound on button click
+  soundButton.addEventListener('click', () => {
+    if (pokemonSound.paused) {
+      pokemonSound.play();
+      soundIcon.textContent = '🔊';
+    } else {
+      pokemonSound.pause();
+      soundIcon.textContent = '🔇';
+    }
   });
 });
-
-
 
 
 
